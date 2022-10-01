@@ -1,2 +1,8 @@
-terraform/terraform.tfstate
-terraform/terraform.tfstate
+terraform/dev-vpc/terraform.tfstate.backup
+terraform/dev-vpc/terraform.tfstate
+terraform/dev-vpc/.terraform.lock.hcl
+terraform/dev-vpc/.terraform
+terraform/build-vpc/terraform.tfstate.backup
+terraform/build-vpc/terraform.tfstate
+terraform/build-vpc/.terraform.lock.hcl
+terraform/build-vpc/.terraform
