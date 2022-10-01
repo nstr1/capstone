@@ -1,0 +1,72 @@
+pipeline {
+    agent { label 'agent1' }  
+
+    tools {
+        maven "M3"
+    }
+    environment {
+        NEXUS_URL = "${NEXUS_URL}" 
+        GITHUB_CREDENTIAL_ID = "${GITHUB_CREDENTIAL_ID}"
+        DOCKER_USERNAME = "${DOCKER_USERNAME}"
+        DOCKER_PASSWORD = "${DOCKER_PASSWORD}"
+    }
+    stages {
+        stage("Set POM vesion according to git tag"){
+            steps{
+                script{
+                    env.GIT_TAG = sh(returnStdout:  true, script: "git tag | sort -V | grep -e \"-SNAPSHOT\" | tail -1").trim()
+                }        
+                sh "mvn versions:set -DnewVersion=${GIT_TAG}"
+            }
+        }
+        stage("Maven test build and push to Nexus (increments minor version)"){
+            steps{
+                sh "mvn clean deploy -DbumpMinor"
+            }
+        }
+        stage("Update git tag"){
+            steps{
+                script{
+                    pom = readMavenPom file: 'pom.xml'
+                    env.VERSION = pom.version
+                }        
+                sh "git tag ${VERSION}"
+                
+                withCredentials([usernamePassword(credentialsId: env.GITHUB_CREDENTIAL_ID, passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    sh "git remote set-url origin https://$user:$pass@github.com/$user/spring-petclinic.git"
+                    sh "git push origin --tags"
+                }
+            }
+        }
+        stage("Docker Build and Tag"){
+            steps{
+                sh "docker image build -t $NEXUS_URL/petclinic:${VERSION} ."
+            }
+        }
+        stage("Push Docker image to Nexus repository") {
+            steps{
+                sh "docker login $NEXUS_URL -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD"
+                sh "docker push $NEXUS_URL/petclinic --all-tags"
+            }
+        }
+        stage("Prune local Docker images") {
+            steps{
+                sh "docker image prune -af"
+            }
+        }
+        stage("Trigger deploy job"){
+            steps{
+                echo "version is: ${VERSION}"
+                build job: 'petclinic-deploy', parameters:[string(name: 'VERSION', value: "${VERSION}")] , wait: false
+            }
+        }
+    }
+    post {
+        success {
+            slackSend color: "good", message:"Build successful - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+        failure {
+            slackSend color: "danger", message:"Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+    }
+}

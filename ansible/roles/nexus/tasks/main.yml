@@ -1,0 +1,74 @@
+---
+# tasks file for roles/nexus
+  
+- name: Install OpenJDK 8
+  yum: 
+    name: java-1.8.0-openjdk 
+    state: latest
+
+# download nexus 
+
+- name: Download nexus
+  get_url: 
+    url: "{{nexus_download_url}}" 
+    dest: /opt
+
+- name: Extract nexus archive
+  unarchive: 
+    src: /opt/nexus-3.41.0-01-unix.tar.gz 
+    dest: /opt 
+    remote_src: yes
+
+- name: delete archive file
+  file: 
+    state: absent 
+    path: /opt/nexus-3.41.0-01-unix.tar.gz
+
+- name: rename nexus folder
+  command: mv /opt/nexus-3.41.0-01 /opt/nexus
+  ignore_errors: True
+
+- name: delete old folder
+  file: 
+    state: absent 
+    path: /opt/nexus-3.41.0-01
+
+# set user, permissions, config
+
+- name: Add nexus user
+  user: 
+    name: nexus
+    create_home: no 
+    append: yes
+
+- name: set ownership for nexus folder
+  file:
+    path: "{{ item }}"
+    owner: nexus
+    group: nexus
+  loop:
+    - /opt/nexus
+    - /opt/sonatype-work
+    - /tmp
+
+- name: run service as nexus user (nexus.rc)
+  lineinfile: 
+    dest: /opt/nexus/bin/nexus.rc 
+    regexp: "#run_as_user=" 
+    line: "run_as_user=nexus"
+
+# set nexus as a systemd service and start it
+
+- name: create systemd service
+  copy: 
+    src: ./files/nexus.service
+    dest: /etc/systemd/system/nexus.service
+    owner: nexus
+
+- name: reload systemctl and start nexus
+  systemd:
+    name: nexus.service
+    daemon_reload: yes
+    enabled: yes
+    state: started
+

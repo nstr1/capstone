@@ -1,0 +1,20 @@
+---
+# tasks file for roles/app
+
+- name: Stop existing container
+  command: docker container stop app
+  ignore_errors: True
+
+- name: Delete local images
+  command: docker image prune -f -a
+
+- name: Login into Docker
+  command: docker login {{ repo_url }} -u={{ docker_user }} -p={{ docker_pass }}
+
+- name: Run app container
+  command: |
+    docker container run -d --name app -p 8080:8080 --rm {{ repo_url }}/petclinic:{{ version }}
+    --spring.profiles.active=mysql 
+    --spring.datasource.url={{ db_url }} 
+    --spring.datasource.username={{ db_user }} 
+    --spring.datasource.password={{ db_passwd }} 

@@ -1,0 +1,50 @@
+---
+# tasks file for roles/docker
+
+- name: Update all packages and install yum-utils
+  yum:
+    name: 
+      - '*'
+      - yum-utils
+    state: latest
+
+- name: Add Docker repo
+  command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install Docker Engine
+  package:
+    name: 
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    state: latest
+
+- name: Create daemon.json
+  copy: 
+    src: ./files/daemon.json
+    dest: /etc/docker/daemon.json
+    owner: "{{ user }}"
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+
+- name: Add {{ user }} user to docker group
+  user:
+    name: "{{ user }}"
+    groups: docker
+    append: yes
+  
+- name: Give {{ user }} user docker.sock permission
+  file:
+    path: /var/run/docker.sock
+    owner: "{{ user }}"
+    group: docker
+    mode: '0666'

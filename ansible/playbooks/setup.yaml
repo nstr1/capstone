@@ -1,0 +1,35 @@
+---
+- hosts: jenkins-agent
+  become: true
+  become_user: root
+  roles:
+    - docker
+  vars:
+    user: jenkins
+
+# - hosts: jenkins-server
+#   become: true
+#   become_user: root
+#   roles:
+#     - jenkins
+
+# - hosts: app-server
+#   become: true
+#   become_user: root
+#   roles:
+#     - docker
+#   vars:
+#     user: petclinic
+
+
+# - hosts: jenkins-agent
+#   become: true
+#   become_user: root
+#   roles:
+#     - jenkins-agent
+
+# - hosts: nexus-server
+#   become: true
+#   become_user: root
+#   roles:
+#     - nexus

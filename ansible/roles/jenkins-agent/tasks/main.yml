@@ -1,0 +1,36 @@
+---
+# tasks file for roles/jenkins-agent
+
+- name: Install Ansible
+  yum: 
+    name: ansible 
+    state: latest
+
+- name: Create Ansible folder
+  file: 
+    path: /home/jenkins/ansible
+    state: directory
+    owner: jenkins
+    
+- name: Archive local files 
+  delegate_to: localhost
+  command: tar -C .. -vcf ../roles/jenkins-agent/files/app-deploy.tar \
+      roles/app \
+      inventory/dev-inventory \
+      ansible.cfg  \
+      .ssh/app-key \
+      playbooks/app-deploy.yaml 
+
+- name: Unarchive local tarball to ansible folder
+  unarchive: 
+    src: ../roles/jenkins-agent/files/app-deploy.tar
+    dest: /home/jenkins/ansible
+    owner: jenkins
+
+# move settings.xml to .m2 folder
+
+- name: move settings.xml to .m2 folder
+  template:
+    src: ./templates/settings.xml.j2
+    dest: /home/jenkins/.m2/settings.xml
+    owner: jenkins

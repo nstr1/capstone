@@ -6,3 +6,11 @@ terraform/build-vpc/terraform.tfstate.backup
 terraform/build-vpc/terraform.tfstate
 terraform/build-vpc/.terraform.lock.hcl
 terraform/build-vpc/.terraform
+ansible/roles/app/vars/main.yml
+ansible/roles/jenkins-agent/vars/main.yml
+ansible/roles/jenkins-agent/files/app-deploy.tar
+ansible/roles/app/vars/main.yml
+ansible/inventory
+ansible/.ssh
+ansible/ansible.cfg
+.DS_Store
