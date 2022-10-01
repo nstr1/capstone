@@ -35,16 +35,28 @@ should NOT upload artifacts to Nexus.
 5. upload artifact(s) to Nexus (release repository);
 6. Build Docker image with released artifact (pulls proper version from Nexus release repo). Tag it like: petclinic:release-artifact-version (e.g. petclinic:1.0.0) and push it to Nexus Docker release registry.
 
-# Solution
+# Solution:
+
+## Terraform
 
 Terraform was used to provision the following GCP infrastructure:
 
 ![Alt text](infrastructure-diagram.png?raw=true "Title")
 
 Terraform configuration is split into build-vpc and dev-vpc. There are 3 modules for creating networks, compute instances and firewall rules
-Terraform generates ssh keys and ansible inventory, and puts them in ansible folder for further use
+Terraform generates ssh keys for compute instances, and ansible inventory, which are placed in ansible folder for further use
+MySQL server is used for application backend
 
-Ansible is used to set up all Compute instances. app role is used on jenkins-agent for deploying the application from Nexus to app-server.
+##Ansible
+
+Ansible is used to set up all Compute instances. 
+app role is used on jenkins-agent for deploying the application from Nexus to app-server.
+docker role installs Docker on jenkins-agent and app-server
+jenkins role installs Jenkins on jenkins-server
+nexus role installs Nexus on nexus-server
+jenkins-agent role installs Ansible and moves app role to jenkins-agent
+
+##Jenkins
 
 Jenkins precommit job runs maven and docker builds whenever a pull request is opened. Github will show the status of the build on the pull request page.
 
