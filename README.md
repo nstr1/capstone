@@ -47,7 +47,7 @@ Terraform configuration is split into build-vpc and dev-vpc. There are 3 modules
 Terraform generates ssh keys for compute instances, and ansible inventory, which are placed in ansible folder for further use
 MySQL server is used for application backend
 
-##Ansible
+## Ansible
 
 Ansible is used to set up all Compute instances. 
 app role is used on jenkins-agent for deploying the application from Nexus to app-server.
@@ -56,7 +56,7 @@ jenkins role installs Jenkins on jenkins-server
 nexus role installs Nexus on nexus-server
 jenkins-agent role installs Ansible and moves app role to jenkins-agent
 
-##Jenkins
+## Jenkins
 
 Jenkins precommit job runs maven and docker builds whenever a pull request is opened. Github will show the status of the build on the pull request page.
 
