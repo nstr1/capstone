@@ -8,7 +8,7 @@ jobs:
   if_merged:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    permissions: {}
+    permissions: read-all|write-all
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
