@@ -16,9 +16,9 @@ jobs:
         run: >
           gh api --method POST -H "Accept: application/vnd.github+json" 
           /repos/nstr1/capstone/releases 
-          -f tag_name='v2.0.1' 
+          -f tag_name='v2.5.1' 
           -f target_commitish='master' 
-          -f name='v2.0.1' 
+          -f name='v2.5.1' 
           -f body='Description' 
           -F draft=true 
           -F prerelease=false 
