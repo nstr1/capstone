@@ -12,6 +12,9 @@ jobs:
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
         run: |
-          gh api --method POST -H "Accept: application/vnd.github+json" /repos/nstr1/capstone/releases -f tag_name='v2.0.0' -f target_commitish='master' -f name='v2.0.0' -f body='Description of the release' -F draft=true -F prerelease=false -F generate_release_notes=true 
+          gh api --method POST -H "Accept: application/vnd.github+json" /repos/nstr1/capstone/releases -f tag_name='v2.0.0' -f target_commitish='master' -f name='v2.0.0' -f body='Description of the release' -F draft=true -F prerelease=false -F generate_release_notes=false
+          gh api --method POST -H "Accept: application/vnd.github+json" /repos/nstr1/capstone/issues/{PR_NUMBER}/comments -f body='Great stuff!' 
+          
           
