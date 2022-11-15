@@ -16,7 +16,7 @@ jobs:
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
-            /repos/nstr1/capstione/releases \
+            /repos/nstr1/capstone/releases \
             -f tag_name='v1.0.0' \
             -f target_commitish='master' \
             -f name='v1.0.0' \
