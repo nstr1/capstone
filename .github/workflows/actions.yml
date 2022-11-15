@@ -12,7 +12,7 @@ jobs:
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: >
+        run: |
           gh api --method POST -H "Accept: application/vnd.github+json" /repos/nstr1/capstone/releases
             -f tag_name='v1.0.0'
             -f target_commitish='master'
