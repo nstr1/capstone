@@ -28,7 +28,7 @@ jobs:
         run: >
           echo "CURRENT_VER=$(
           gh api -H "$HEADER"
-          /repos/"$ORGANIZATION_NAME"/$REPO"/releases/latest)"
+          /repos/"$ORGANIZATION_NAME"/"$REPO"/releases/latest)"
           >> $GITHUB_ENV
       - name: echo
         run: 
