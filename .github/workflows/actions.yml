@@ -19,9 +19,7 @@ jobs:
   draft-release:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      issues: write
+    permissions: write-all
     steps:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
