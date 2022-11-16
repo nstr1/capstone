@@ -2,12 +2,11 @@ name: draft-release
 
 on:
   pull_request:
-    branches:
-      - master
-    types: [closed]
+    types:
+      - closed
 
 jobs:
-  if_merged:
+  draft-release:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions: write-all
