@@ -7,12 +7,12 @@ on:
   
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  PR_NUMBER: ${{ github.event.number }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
   DESC: ${{ github.event.pull_request.title }}
   ORGANIZATION_NAME: "nstr1"
   REPO: "capstone"
   HEADER: "Accept: application/vnd.github+json"
-  TAG: 'v.0.82.5'
+  TAG: 'v.0.83.0'
 
 jobs:
   draft-release:
