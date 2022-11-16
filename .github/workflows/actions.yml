@@ -38,6 +38,6 @@ jobs:
           echo "$URL"
       - name: Post comment on PR with the draft release URL
         run: >
-          gh api --method POST -H $HEADER
+          gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/issues"/$PR_NUMBER"/comments
           -f body="$URL"
