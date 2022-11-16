@@ -20,27 +20,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - name: Create a draft release and get its URL
-        id: get_url
-        run: >
-          url=$( gh api --method POST -H "$HEADER"
+      - run: >
+          echo "URL=$( gh api --method POST -H "$HEADER"
           repos/"$ORGANIZATION_NAME"/"$REPO"/releases
           -f tag_name="$TAG"
           -f target_commitish='master'
           -f name="$TAG"
           -f body="desc"
           -F draft=true
-          | jq '.html_url')
-          echo "$url"
-          echo "URL=$url" >> $GITHUB_OUTPUT
-      - name: echo url
-        run:
-          echo "${{ steps.get_url.outputs.URL }}"
+          | jq '.html_url')" >> $GITHUB_ENV
       - name: Post comment on PR with the draft release URL
         run: >
           gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/issues"/$PR_NUMBER"/comments
-          -f body="${{ steps.get_url.outputs.URL }}"
+          -f body="URL"
 
 
 # url=$( gh api \
