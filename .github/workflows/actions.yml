@@ -21,6 +21,7 @@ jobs:
     permissions: write-all
     steps:
       - name: Create a draft release and get its URL
+        id: url
         run: >
           url=$( gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/releases
@@ -32,12 +33,12 @@ jobs:
           -F prerelease=false
           -F generate_release_notes=false
           | jq '.url')
-          echo "URL=$url" >> "$GITHUB_ENV"
+          echo "URL=$url" >> $GITHUB_OUTPUT
       - name: echo url
         run:
-          echo "$URL"
+          echo "${{ steps.url.outputs.url }}"
       - name: Post comment on PR with the draft release URL
         run: >
           gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/issues"/$PR_NUMBER"/comments
-          -f body="$URL"
+          -f body="${{ steps.url.outputs.url }}"
