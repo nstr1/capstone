@@ -1,21 +1,24 @@
 name: draft-release
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - master
-  
+      
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PR_NUMBER: ${{ github.event.pull_request.number }}
-  DESC: ${{ github.event.pull_request.title }}
+  DESC: ${{ github.event.head_commit.message }}
   ORGANIZATION_NAME: "nstr1"
   REPO: "capstone"
   HEADER: "Accept: application/vnd.github+json"
-  TAG: 'v.0.83.0'
+  TAG: 'v.0.85.0'
 
 jobs:
   draft-release:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
