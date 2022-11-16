@@ -30,6 +30,8 @@ jobs:
           gh api -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/$REPO"/releases/latest)"
           >> $GITHUB_ENV
+      - name: echo
+          echo "$CURRENT_VER"
       - name: Create a release draft and get its URL
         run: >
           echo "URL=$(
