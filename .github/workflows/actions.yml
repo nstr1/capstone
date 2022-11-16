@@ -20,31 +20,30 @@ jobs:
   draft-release:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      pull-requests: write
+      issues: write
     steps:
-      - name: Create a release draft and get its url
+      - name: Get latest release verison
         run: >
-          echo "URL=$( gh api --method POST -H "$HEADER"
+          echo "CURRENT_VER=$(
+          gh api -H "$HEADER"
+          /repos/"$ORGANIZATION_NAME"/$REPO"/releases/latest)"
+          >> $GITHUB_ENV
+      - name: Create a release draft and get its URL
+        run: >
+          echo "URL=$(
+          gh api --method POST -H "$HEADER"
           repos/"$ORGANIZATION_NAME"/"$REPO"/releases
           -f tag_name="$TAG"
           -f target_commitish='master'
           -f name="$TAG"
           -f body="$DESC"
           -F draft=true
-          | jq -r '.html_url')" >> $GITHUB_ENV
+          | jq -r '.html_url')"
+          >> $GITHUB_ENV
       - name: Post comment on PR with the release draft URL
         run: >
           gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/issues/"$PR_NUMBER"/comments
           -f body="Release draft URL: $URL"
-
-
-# url=$( gh api \
-# --method POST \
-# -H "Accept: application/vnd.github+json" \
-# /repos/nstr1/capstone/releases \
-# -f tag_name='0.73.0' \
-# -f target_commitish='master' \
-# -f name='0.73.0' \
-# -f body='desc' \
-# -F draft=true | jq '.html_url')
