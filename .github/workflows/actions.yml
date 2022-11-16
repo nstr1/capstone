@@ -32,7 +32,7 @@ jobs:
       - name: Post comment on PR with the release draft URL
         run: >
           gh api --method POST -H "$HEADER"
-          /repos/"$ORGANIZATION_NAME"/"$REPO"/issues"/$PR_NUMBER"/comments
+          /repos/"$ORGANIZATION_NAME"/"$REPO"/issues/"$PR_NUMBER"/comments
           -f body="Release draft URL: $URL"
 
 
