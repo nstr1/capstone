@@ -1,10 +1,10 @@
 name: draft-release
+
 on:
   pull_request:
-    types:
-      - closed
     branches:
       - master
+    types: [closed]
 
 jobs:
   if_merged:
