@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Create a draft release and get its URL
         run: >
-          url=$( gh api --method POST -H "$HEADER"
+          echo "$( gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/releases
           -f tag_name="$TAG"
           -f target_commitish='master'
@@ -31,12 +31,10 @@ jobs:
           -F draft=true
           -F prerelease=false
           -F generate_release_notes=false
-          | jq '.url')
-          echo "URL=$url" >> "$GITHUB_ENV"
+          | jq '.url')"
       - name: echo url
         run:
           echo "$URL"
-          echo "$GITHUB_ENV"
       - name: Post comment on PR with the draft release URL
         run: >
           gh api --method POST -H $HEADER
