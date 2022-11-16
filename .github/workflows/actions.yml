@@ -12,7 +12,7 @@ env:
   ORGANIZATION_NAME: "nstr1"
   REPO: "capstone"
   HEADER: "Accept: application/vnd.github+json"
-  TAG: 'v.0.72.1'
+  TAG: 'v.0.72.2'
 
 jobs:
   draft-release:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Create a draft release and get its URL
         run: >
-          echo "$( gh api --method POST -H "$HEADER"
+          url=$( gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/releases
           -f tag_name="$TAG"
           -f target_commitish='master'
@@ -31,7 +31,8 @@ jobs:
           -F draft=true
           -F prerelease=false
           -F generate_release_notes=false
-          | jq '.url')"
+          | jq '.url')
+          echo "URL=$url" >> "$GITHUB_ENV"
       - name: echo url
         run:
           echo "$URL"
