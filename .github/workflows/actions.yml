@@ -3,6 +3,8 @@ on:
   pull_request:
     types:
       - closed
+    branches:
+      - PAYM_383
 
 jobs:
   if_merged:
@@ -12,6 +14,25 @@ jobs:
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh api --method POST -H "Accept: application/vnd.github+json" /repos/nstr1/capstone/releases -f tag_name='v2.0.0' -f target_commitish='master' -f name='v2.0.0' -f body='Description of the release' -F draft=true -F prerelease=false -F generate_release_notes=true 
-          
+          PR_NUMBER: ${{ github.event.number }}
+          DESC: ${{ github.event.head_commit.message }}
+          ORGANIZATION_NAME: "nstr1"
+          REPO: "capstone"
+          HEADER: "Accept: application/vnd.github+json"
+          TAG: 'v.0.72.1'
+      - run: >
+          url=$( gh api --method POST -H $HEADER
+          /repos/$ORGANIZATION_NAME/$REPO/releases 
+          -f tag_name=$TAG
+          -f target_commitish='master' 
+          -f name=$TAG
+          -f body=$DESC
+          -F draft=true 
+          -F prerelease=false 
+          -F generate_release_notes=false
+          | jq '.url')
+          echo "URL=$url" >> "$GITHUB_ENV"
+      - run: >
+          gh api --method POST -H $HEADER
+          /repos/$ORGANIZATION_NAME/$REPO/issues/$PR_NUMBER/comments 
+          -f body=$URL
