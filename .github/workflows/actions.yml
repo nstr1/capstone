@@ -24,16 +24,15 @@ jobs:
         id: get_url
         run: >
           url=$( gh api --method POST -H "$HEADER"
-          /repos/"$ORGANIZATION_NAME"/"$REPO"/releases
+          repos/"$ORGANIZATION_NAME"/"$REPO"/releases
           -f tag_name="$TAG"
           -f target_commitish='master'
           -f name="$TAG"
           -f body="desc"
           -F draft=true
-          -F prerelease=false
-          -F generate_release_notes=false
-          | jq '.url')
-          echo "URL=$url" >>$GITHUB_OUTPUT
+          | jq '.html_url')
+          echo "$url"
+          echo "URL=$url" >> $GITHUB_OUTPUT
       - name: echo url
         run:
           echo "${{ steps.get_url.outputs.URL }}"
@@ -42,3 +41,14 @@ jobs:
           gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/issues"/$PR_NUMBER"/comments
           -f body="${{ steps.get_url.outputs.URL }}"
+
+
+# url=$( gh api \
+# --method POST \
+# -H "Accept: application/vnd.github+json" \
+# /repos/nstr1/capstone/releases \
+# -f tag_name='0.73.0' \
+# -f target_commitish='master' \
+# -f name='0.73.0' \
+# -f body='desc' \
+# -F draft=true | jq '.html_url')
