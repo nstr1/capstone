@@ -12,7 +12,7 @@ env:
   ORGANIZATION_NAME: "nstr1"
   REPO: "capstone"
   HEADER: "Accept: application/vnd.github+json"
-  TAG: 'v.0.72.2'
+  TAG: 'v.0.82.5'
 
 jobs:
   draft-release:
