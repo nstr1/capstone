@@ -2,10 +2,10 @@ name: draft-release
 
 on:
   pull_request:
-    branches:
-      - master
     types:
       - closed
+    branches:
+      - master
   
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
         run: >
           gh api --method POST -H "$HEADER"
           /repos/"$ORGANIZATION_NAME"/"$REPO"/issues"/$PR_NUMBER"/comments
-          -f body="$URL"
+          -f body="Release draft URL: $URL"
 
 
 # url=$( gh api \
