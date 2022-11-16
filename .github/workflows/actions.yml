@@ -4,6 +4,15 @@ on:
   pull_request:
     types:
       - closed
+  
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  PR_NUMBER: ${{ github.event.number }}
+  DESC: ${{ github.event.head_commit.message }}
+  ORGANIZATION_NAME: "nstr1"
+  REPO: "capstone"
+  HEADER: "Accept: application/vnd.github+json"
+  TAG: 'v.0.72.1'
 
 jobs:
   draft-release:
@@ -11,14 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.number }}
-          DESC: ${{ github.event.head_commit.message }}
-          ORGANIZATION_NAME: "nstr1"
-          REPO: "capstone"
-          HEADER: "Accept: application/vnd.github+json"
-          TAG: 'v.0.72.1'
       - run: >
           url=$( gh api --method POST -H $HEADER
           /repos/$ORGANIZATION_NAME/$REPO/releases 
