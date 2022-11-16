@@ -27,7 +27,7 @@ jobs:
           -f tag_name="$TAG"
           -f target_commitish='master'
           -f name="$TAG"
-          -f body="$DESC"
+          -f body="desc"
           -F draft=true
           -F prerelease=false
           -F generate_release_notes=false
