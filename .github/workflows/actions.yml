@@ -20,19 +20,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - run: >
+      - name: Create a draft release and get its URL
+        run: >
           url=$( gh api --method POST -H $HEADER
-          /repos/$ORGANIZATION_NAME/$REPO/releases 
+          /repos/$ORGANIZATION_NAME/$REPO/releases
           -f tag_name=$TAG
-          -f target_commitish='master' 
+          -f target_commitish='master'
           -f name=$TAG
           -f body=$DESC
-          -F draft=true 
-          -F prerelease=false 
+          -F draft=true
+          -F prerelease=false
           -F generate_release_notes=false
           | jq '.url')
           echo "URL=$url" >> "$GITHUB_ENV"
-      - run: >
+      - name: echo url
+        run:
+          echo "$URL"
+      - name: Post comment on PR with the draft release URL
+        run: >
           gh api --method POST -H $HEADER
-          /repos/$ORGANIZATION_NAME/$REPO/issues/$PR_NUMBER/comments 
+          /repos/$ORGANIZATION_NAME/$REPO/issues/$PR_NUMBER/comments
           -f body=$URL
