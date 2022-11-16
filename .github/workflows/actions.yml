@@ -36,6 +36,7 @@ jobs:
       - name: echo url
         run:
           echo "$URL"
+          echo "$GITHUB_ENV"
       - name: Post comment on PR with the draft release URL
         run: >
           gh api --method POST -H $HEADER
