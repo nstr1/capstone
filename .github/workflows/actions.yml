@@ -9,12 +9,11 @@ on:
       
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  PR_NUMBER: ${{ github.event.pull_request.number }}
-  DESC: ${{ github.event.pull_request.title  }}
   ORGANIZATION_NAME: "nstr1"
   REPO: "capstone"
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  DESC: ${{ github.event.pull_request.title  }}
   HEADER: "Accept: application/vnd.github+json"
-  TAG: 'v.0.85.0'
 
 jobs:
   draft-release:
@@ -24,23 +23,20 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-      - name: Get latest release verison
-        run: >
-          echo "CURRENT_VER=$(
-          gh api -H "$HEADER"
-          /repos/"$ORGANIZATION_NAME"/"$REPO"/releases/latest)"
-          >> $GITHUB_ENV
-      - name: echo
-        run: 
-          echo "$CURRENT_VER"
+      - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create a release draft and get its URL
         run: >
           echo "URL=$(
           gh api --method POST -H "$HEADER"
           repos/"$ORGANIZATION_NAME"/"$REPO"/releases
-          -f tag_name="$TAG"
+          -f tag_name="$NEW_VER"
           -f target_commitish='master'
-          -f name="$TAG"
+          -f name="$NEW_VER"
           -f body="$DESC"
           -F draft=true
           | jq -r '.html_url')"
