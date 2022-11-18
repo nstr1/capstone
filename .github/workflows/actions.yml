@@ -31,16 +31,7 @@ jobs:
           release_branches: master
       - name: Create a release draft and get its URL
         run: >
-          echo "URL=$(
-          gh api --method POST -H "$HEADER"
-          repos/"$ORGANIZATION_NAME"/"$REPO"/releases
-          -f tag_name=${{ steps.tag_version.outputs.new_tag }}
-          -f target_commitish='master'
-          -f name=${{ steps.tag_version.outputs.new_tag }}
-          -f body=${{ steps.tag_version.outputs.changelog }}
-          -F draft=true
-          | jq -r '.html_url')"
-          >> $GITHUB_ENV
+          echo "URL=$(gh api --method POST -H "$HEADER" repos/"$ORGANIZATION_NAME"/"$REPO"/releases -f tag_name=${{ steps.tag_version.outputs.new_tag }} -f target_commitish='master' -f name=${{steps.tag_version.outputs.new_tag}} -f body=${{steps.tag_version.outputs.changelog}} -F draft=true | jq -r '.html_url')" >> $GITHUB_ENV
       - name: Post comment on PR with the release draft URL
         run: >
           gh api --method POST -H "$HEADER"
