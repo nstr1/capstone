@@ -33,9 +33,9 @@ jobs:
         run: >
           echo "URL=$(gh api --method POST 
           -H "$HEADER" repos/"$ORGANIZATION_NAME"/"$REPO"/releases 
-          -f tag_name=${{ steps.tag_version.outputs.new_tag }} 
+          -f tag_name="${{ steps.tag_version.outputs.new_tag }}"
           -f target_commitish='master' 
-          -f name=${{ steps.tag_version.outputs.new_tag }} 
+          -f name="${{ steps.tag_version.outputs.new_tag }}"
           -f body="${{ steps.tag_version.outputs.changelog }}"
           -F draft=true
           | jq -r '.html_url')" 
