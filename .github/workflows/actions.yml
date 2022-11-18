@@ -37,7 +37,7 @@ jobs:
           -f tag_name=${{ steps.tag_version.outputs.new_tag }}
           -f target_commitish='master'
           -f name=${{ steps.tag_version.outputs.new_tag }}
-          -f body=${{ steps.tag_version.outputs.changelog }}
+          -f body=$DESC
           -F draft=true
           | jq -r '.html_url')"
           >> $GITHUB_ENV
